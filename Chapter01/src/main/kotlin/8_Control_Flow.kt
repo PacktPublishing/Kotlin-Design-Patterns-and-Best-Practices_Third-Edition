@@ -24,7 +24,7 @@ fun loops() {
         println(i)
     }
 
-    for (i in 0 until 10) {
+    for (i in 0 ..< 10) {
         println("for until $i") // Same output as the previous loop
     }
 
