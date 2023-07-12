@@ -24,10 +24,10 @@ data class User(
 
 private val allUsers = mutableListOf<User>()
 
-fun createUser(_name: String, role: Role) {
+fun createUser(userName: String, role: Role) {
     for (u in allUsers) {
         if (u.role == role) {
-            allUsers += u.copy(name = _name)
+            allUsers += u.copy(name = userName)
             return
         }
     }
