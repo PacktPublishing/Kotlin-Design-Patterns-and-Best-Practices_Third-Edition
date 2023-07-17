@@ -11,6 +11,6 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "15"
+kotlin {
+    jvmToolchain(17)
 }
