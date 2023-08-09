@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.0-RC"
+    kotlin("jvm") version "1.9.0"
     application
 }
 
@@ -11,6 +11,6 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "15"
+kotlin {
+    jvmToolchain(20)
 }
