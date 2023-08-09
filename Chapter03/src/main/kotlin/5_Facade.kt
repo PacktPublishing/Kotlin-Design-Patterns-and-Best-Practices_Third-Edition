@@ -1,8 +1,6 @@
 import java.io.FileNotFoundException
-import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
 
-@OptIn(ExperimentalPathApi::class)
 fun main() {
     try {
         val server = Server.withPort(0).startFromConfiguration("/path/to/config")
@@ -11,7 +9,6 @@ fun main() {
     }
 }
 
-@ExperimentalPathApi
 fun Server.startFromConfiguration(fileLocation: String) {
     val path = Path(fileLocation)
 
