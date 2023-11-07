@@ -1,12 +1,10 @@
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 
 fun main() {
-
     runBlocking {
         val stock: Flow<Int> = flow {
             var i = 0
@@ -23,6 +21,4 @@ fun main() {
             println("$seconds seconds -> received $number")
         }
     }
-
-
 }
