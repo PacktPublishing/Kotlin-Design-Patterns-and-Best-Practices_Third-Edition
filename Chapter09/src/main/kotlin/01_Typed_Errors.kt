@@ -1,79 +1,121 @@
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.raise.Raise
-import arrow.core.raise.either
-import arrow.core.raise.fold
-import arrow.core.right
+import arrow.core.*
+import arrow.core.raise.*
+import java.util.*
 
 fun main() {
-    //  withNulls()
-    // withRaise()
-    withEither()
+    withNullsAndExceptions()
+    //  withEither()
+    withRaise()
+    withResult()
 }
 
 fun withEither() {
-    val box = DonutBoxEither(1)
-
-    box.addDonut(
-        Donut(
-            "TONGAN VANILLA BEAN CUSTARD",
-            listOf("Milk", "Wheat"),
-            1000
-        )
-    )
-
-    when (val result = box.removeDonut("SRI LANKAN CINNAMON SUGAR")) {
-        is Either.Left -> println("No donut for me")
-        is Either.Right -> println("I've got ${result.value.name}")
+    when (val box = DonutBoxEither(1)) {
+        is Either.Left -> println("Couldn't construct a box")
+        is Either.Right -> {
+            val validBox = box.value
+            when (validBox.addDonut(
+                Donut(
+                    "TONGAN VANILLA BEAN CUSTARD",
+                    1000,
+                    listOf("Milk", "Wheat")
+                )
+            )) {
+                is Either.Left -> println("No space in box")
+                is Either.Right -> when (val result = validBox.removeDonut("SRI LANKAN CINNAMON SUGAR")) {
+                    is Either.Left -> println("No donut for me")
+                    is Either.Right -> println("I've got ${result.value.name}")
+                }
+            }
+        }
     }
 }
 
-fun withRaise() {
-    val box = DonutBoxRaise(1)
+fun withResult() {
+    val box = DonutBoxResult(1)
 
-    box.addDonut(
+    val result = box.addDonut(
         Donut(
             "TONGAN VANILLA BEAN CUSTARD",
-            listOf("Milk", "Wheat"),
-            1000
+            1000,
+            listOf("Milk", "Wheat")
         )
     )
 
-    fold(
-        {
-            removeDonut(box, "SRI LANKAN CINNAMON SUGAR")
-        },
-        { _: NoSuchDonut ->
-            println("No donut for me")
-        },
-        { donut: Donut ->
-            println("I've got ${donut.name}")
+    result.fold(
+        onFailure = { println("No space in the box") },
+        onSuccess = {
+            val donutResult = box.removeDonut("SRI LANKAN CINNAMON SUGAR")
+            donutResult.fold(
+                onSuccess = { donut ->
+                    println("I've got ${donut.name}")
+                },
+                onFailure = { println("No donut for me") }
+            )
         }
     )
 }
 
-fun withNulls() {
-    val box = DonutBox(1)
-    box.addDonut(
-        Donut(
-            "TONGAN VANILLA BEAN CUSTARD",
-            listOf("Milk", "Wheat"),
-            1000
-        )
-    )
+class NoSpaceInBoxException : RuntimeException("No space in box")
 
-    val donut = box.removeDonut("SRI LANKAN CINNAMON SUGAR")
-    if (donut != null) {
-        println("I've got ${donut.name}")
-    } else {
-        println("No donut for me")
+fun withRaise() {
+    val box = DonutBoxRaise(1)
+
+    fold(
+        {
+            addDonut(
+                box,
+                Donut(
+                    "TONGAN VANILLA BEAN CUSTARD",
+                    1000,
+                    listOf("Milk", "Wheat"),
+                )
+            )
+        }, {
+            println("No space in box")
+        }, {
+            fold(
+                {
+                    removeDonut(box, "SRI LANKAN CINNAMON SUGAR")
+                },
+                { _: NoSuchDonut ->
+                    println("No donut for me")
+                },
+                { donut: Donut ->
+                    println("I've got ${donut.name}")
+                }
+            )
+        }
+    )
+}
+
+fun withNullsAndExceptions() {
+    val box = DonutBox(1)
+
+    try {
+        box.addDonut(
+            Donut(
+                "TONGAN VANILLA BEAN CUSTARD",
+                1000,
+                listOf("Milk", "Wheat"),
+            )
+        )
+
+        val donut = box.removeDonut("SRI LANKAN CINNAMON SUGAR")
+        if (donut != null) {
+            println("I've got ${donut.name}")
+        } else {
+            println("No donut for me")
+        }
+    } catch (e: NoSpaceInBoxException) {
+        println(e.message)
     }
 }
 
 data class Donut(
     val name: String,
-    val allergens: List<String>,
-    val calories: Int
+    val calories: Int,
+    val allergens: List<String> = listOf()
 )
 
 class DonutBox(private val capacity: Int) {
@@ -82,63 +124,146 @@ class DonutBox(private val capacity: Int) {
         if (donuts.size < capacity) {
             donuts.add(donut)
         } else {
-            throw RuntimeException("No space in the box")
+            throw NoSpaceInBoxException()
         }
     }
 
     fun removeDonut(name: String): Donut? {
-        val donutIndex = donuts.indexOfFirst { it.name == name }
-        if (donutIndex >= 0) {
-            return donuts.removeAt(donutIndex)
+        return donuts.find { it.name == name }?.let {
+            donuts.remove(it)
+            it
         }
-
-        return null
     }
 }
 
-class DonutBoxRaise(private val capacity: Int) {
-    val donuts = mutableListOf<Donut>()
-
-    fun addDonut(donut: Donut): DonutBoxRaise {
+class DonutBoxOptional(private val capacity: Int) {
+    private val donuts = mutableListOf<Donut>()
+    fun addDonut(donut: Donut): DonutBoxOptional = apply {
         if (donuts.size < capacity) {
             donuts.add(donut)
-            return this
         } else {
-            throw RuntimeException("No space in the box")
+            throw NoSpaceInBoxException()
         }
+    }
+
+    fun removeDonut(name: String): Optional<Donut> {
+        return donuts.find { it.name == name }?.let {
+            donuts.remove(it)
+            Optional.of(it)
+        } ?: Optional.empty()
     }
 }
 
+
 data class NoSuchDonut(val name: String)
+
+
+sealed interface BoxError
+data object NoSpaceInBox : BoxError
+data object AlmostNoSpaceInBox : BoxError
+
+data class DonutBoxRaise(
+    val capacity: Int,
+    val donuts: MutableList<Donut> = mutableListOf(),
+)
+
+fun Raise<NoSpaceInBox>.addDonut(
+    donutBox: DonutBoxRaise,
+    donut: Donut
+): DonutBoxRaise {
+    if (donutBox.donuts.size < donutBox.capacity) {
+        donutBox.donuts.add(donut)
+        return donutBox
+    } else {
+        raise(NoSpaceInBox)
+    }
+}
 
 fun Raise<NoSuchDonut>.removeDonut(
     box: DonutBoxRaise,
     name: String
 ): Donut {
-    val donutIndex = box.donuts.indexOfFirst { it.name == name }
-    if (donutIndex >= 0) {
-        return box.donuts.removeAt(donutIndex)
+    box.donuts.find { it.name == name }?.let {
+        box.donuts.remove(it)
+        return it
     }
 
     raise(NoSuchDonut(name))
 }
 
-class DonutBoxEither(private val capacity: Int) {
-    private val donuts = mutableListOf<Donut>()
-    fun addDonut(donut: Donut) = apply {
-        if (donuts.size < capacity) {
-            donuts.add(donut)
-        } else {
-            throw RuntimeException("No space in the box")
+data class NonPositiveCapacity(val capacity: Int)
+
+class DonutBoxEither private constructor(private val capacity: Int) {
+    companion object {
+        operator fun invoke(capacity: Int): Either<NonPositiveCapacity, DonutBoxEither> = either {
+            ensure(capacity > 0) { NonPositiveCapacity(capacity) }
+            DonutBoxEither(capacity)
         }
     }
 
-    fun removeDonut(name: String): Either<NoSuchDonut, Donut> = either {
-        val donutIndex = donuts.indexOfFirst { it.name == name }
-        return if (donutIndex >= 0) {
-            (donuts.removeAt(donutIndex)).right()
-        } else {
-            (NoSuchDonut(name)).left()
+    private val donuts = mutableListOf<Donut>()
+
+    fun addDonut(donut: Donut): Either<NoSpaceInBox, DonutBoxEither> =
+        either {
+            ensure(
+                donuts.size <= capacity
+            ) { NoSpaceInBox }
+            donuts.add(donut)
+            this@DonutBoxEither
         }
+
+    fun removeDonut(name: String): Either<NoSuchDonut, Donut> {
+        return donuts.find { it.name == name }?.let {
+            donuts.remove(it)
+            return it.right()
+        } ?: NoSuchDonut(name).left()
     }
 }
+
+class DonutBoxIor(private val capacity: Int) {
+    private val donuts = mutableListOf<Donut>()
+
+    fun addDonut(donut: Donut): Ior<BoxError, DonutBoxIor> =
+        ior(combineError = { _, both -> both }) {
+            ensure(
+                donuts.size <= capacity
+            ) { NoSpaceInBox }
+            donuts.add(donut)
+
+            return if (donuts.size == capacity) {
+                (AlmostNoSpaceInBox to this@DonutBoxIor).bothIor()
+            } else {
+                (this@DonutBoxIor).rightIor()
+            }
+        }
+
+    fun removeDonut(name: String): Ior<NoSuchDonut, Donut> {
+        return donuts.find { it.name == name }?.let {
+            donuts.remove(it)
+            return (NoSuchDonut(name) to it).bothIor()
+        } ?: NoSuchDonut(name).leftIor()
+    }
+}
+
+class DonutBoxResult(private val capacity: Int) {
+    private val donuts = mutableListOf<Donut>()
+
+    fun addDonut(donut: Donut): Result<DonutBoxResult> =
+        if (donuts.size <= capacity) {
+            donuts.add(donut)
+            Result.success(this)
+        } else {
+            Result.failure(
+                NoSpaceInBoxException()
+            )
+        }
+
+    fun removeDonut(name: String): Result<Donut> {
+        return donuts.find { it.name == name }?.let {
+            donuts.remove(it)
+            Result.success(it)
+        } ?: Result.failure(NoSuchDonutException())
+    }
+}
+
+class NoSuchDonutException : Throwable()

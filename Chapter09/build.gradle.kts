@@ -13,8 +13,11 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/io.arrow-kt/arrow-core
     implementation("io.arrow-kt:arrow-core:1.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("io.arrow-kt:arrow-fx-coroutines:1.2.1")
+    implementation("io.arrow-kt:arrow-resilience-jvm:1.2.1")
+    implementation("io.arrow-kt:arrow-fx-stm-jvm:1.2.1")
     testImplementation(kotlin("test"))
 }
 
@@ -28,4 +31,10 @@ tasks.withType<KotlinCompile> {
 
 application {
     mainClass.set("MainKt")
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
+    }
 }
