@@ -4,7 +4,7 @@ import java.util.*
 
 fun main() {
     withNullsAndExceptions()
-    //  withEither()
+    withEither()
     withRaise()
     withResult()
 }

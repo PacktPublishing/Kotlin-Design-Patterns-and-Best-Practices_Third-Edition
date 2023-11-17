@@ -10,7 +10,7 @@ fun main() {
             .addDonut(Donut("SRI LANKAN CINNAMON SUGAR", 800, listOf("Wheat")))
     }, {}, {})
 
-  //  mapAndAccumulate(box)
+    mapAndAccumulate(box)
     zipAndAccumulate(box)
 }
 

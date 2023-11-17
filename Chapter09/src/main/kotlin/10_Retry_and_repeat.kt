@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.toList
 import kotlin.time.Duration.Companion.seconds
 
 suspend fun main() {
-    //retryExample()
+    retryExample()
 
     val successThenFailure = sequence {
         yield { "OK" }

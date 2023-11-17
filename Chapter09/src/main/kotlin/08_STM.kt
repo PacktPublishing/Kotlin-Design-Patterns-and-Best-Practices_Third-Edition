@@ -1,27 +1,20 @@
 import arrow.fx.stm.*
-import arrow.fx.stm.TSet
-import arrow.fx.stm.TArray
-import kotlinx.coroutines.runBlocking
-import java.lang.RuntimeException
 import kotlin.random.Random
 
-fun main() {
-    runBlocking {
-    /*    val myBox: TVar<DonutBoxSTM> =
-            DonutBoxSTM(Donut("Rum&pecan caramel donut", 1000))
-        val yourBox = DonutBoxSTM()
+suspend fun main() {
+    val myBox: TVar<DonutBoxSTM> =
+        DonutBoxSTM(Donut("Rum&pecan caramel donut", 1000))
+    val yourBox = DonutBoxSTM()
 
-        atomically {
-            giveDonut(myBox, yourBox, "Rum&pecan caramel donut")
-        }
-
-        println(myBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
-        println(yourBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
-*/
-
-    //    exampleTSet()
-        exampleRetry()
+    atomically {
+        giveDonut(myBox, yourBox, "Rum&pecan caramel donut")
     }
+
+    println(myBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
+    println(yourBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
+
+    exampleTSet()
+    exampleRetry()
 }
 
 suspend fun exampleRetry() {

@@ -2,19 +2,16 @@ import arrow.core.merge
 import arrow.fx.coroutines.raceN
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-fun main() {
-    runBlocking {
-val winner: Pair<String, String> = raceN(
-    { preciseWeather() },
-    { weatherToday() }
-).merge()
+suspend fun main() {
+    val winner: Pair<String, String> = raceN(
+        { preciseWeather() },
+        { weatherToday() }
+    ).merge()
 
-println("Winner: $winner")
-    }
+    println("Winner: $winner")
 }
 
 suspend fun preciseWeather() = withContext(Dispatchers.IO) {

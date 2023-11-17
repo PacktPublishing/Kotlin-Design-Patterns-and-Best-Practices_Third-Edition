@@ -4,19 +4,17 @@ import kotlin.random.Random
 import arrow.fx.coroutines.*
 import kotlin.system.measureTimeMillis
 
-fun main() {
-    runBlocking {
-        val t = measureTimeMillis {
-            parZip(
-                { Me.getFavoriteCharacter().await() },
-                { Taylor.getFavoriteCharacter().await() },
-                { Michael.getFavoriteCharacter().await() }
-            ) { me, taylor, michael ->
-                println("Favorite characters are: ${me}, ${taylor}, ${michael}")
-            }
+suspend fun main() {
+    val t = measureTimeMillis {
+        parZip(
+            { Me.getFavoriteCharacter().await() },
+            { Taylor.getFavoriteCharacter().await() },
+            { Michael.getFavoriteCharacter().await() }
+        ) { me, taylor, michael ->
+            println("Favorite characters are: ${me}, ${taylor}, ${michael}")
         }
-        println("Took ${t}ms")
     }
+    println("Took ${t}ms")
 }
 
 data class FavoriteCharacter(

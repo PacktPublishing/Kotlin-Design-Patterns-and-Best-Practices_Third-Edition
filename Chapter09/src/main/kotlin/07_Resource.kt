@@ -2,25 +2,22 @@ import arrow.fx.coroutines.Resource
 import arrow.fx.coroutines.ResourceScope
 import arrow.fx.coroutines.resource
 import arrow.fx.coroutines.resourceScope
-import kotlinx.coroutines.runBlocking
 import java.io.BufferedReader
 import java.io.FileReader
 
-fun main() {
-    /*    BufferedReader(FileReader("./build.gradle.kts")).use {
-            println(it.readLines())
-        }
-
-        val wardrobe = Wardrobe()
-        wardrobe.use {
-
-        }*/
-    runBlocking {
-        val item = getItemFromWardrobe("some socks")
-        println(item)
-
-        println(getItemFromWardrobeResource("some socks"))
+suspend fun main() {
+    BufferedReader(FileReader("./build.gradle.kts")).use {
+        println(it.readLines())
     }
+
+    val wardrobe = Wardrobe()
+    wardrobe.use {
+
+    }
+    val item = getItemFromWardrobe("some socks")
+    println(item)
+
+    println(getItemFromWardrobeResource("some socks"))
 }
 
 val wardrobeResource: Resource<Wardrobe> = resource(

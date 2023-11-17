@@ -1,10 +1,9 @@
 import arrow.resilience.CircuitBreaker
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
-fun main() {
+suspend fun main() {
     var circuitBreaker = CircuitBreaker(
         openingStrategy = CircuitBreaker.OpeningStrategy.Count(1),
         resetTimeout = 1.seconds,
@@ -20,18 +19,16 @@ fun main() {
         println("Closed!")
     }
 
-    runBlocking {
-        remoteServer(0.3).forEach { req ->
-            try {
-                delay(400L)
-                circuitBreaker.protectOrThrow { req() }.also {
-                    println("Response: $it")
-                }
-            } catch (e: RuntimeException) {
-                println("Server returned exception: $e")
-            } catch (e: CircuitBreaker.ExecutionRejected) {
-                println("Circuit breaker exception: ${e.reason}")
+    remoteServer(0.3).forEach { req ->
+        try {
+            delay(400L)
+            circuitBreaker.protectOrThrow { req() }.also {
+                println("Response: $it")
             }
+        } catch (e: RuntimeException) {
+            println("Server returned exception: $e")
+        } catch (e: CircuitBreaker.ExecutionRejected) {
+            println("Circuit breaker exception: ${e.reason}")
         }
     }
 }
