@@ -12,14 +12,14 @@ fun main() {
         })
         val (name, catchphrase, _) = fetchFavoriteCharacterCorrect("Inigo Montoya")
         println("$name says: $catchphrase")
-        val characters: List<Deferred<FavoriteCharacter>> =
-            listOf(
-                Me.getFavoriteCharacter(),
-                Taylor.getFavoriteCharacter(),
-                Michael.getFavoriteCharacter()
-            )
+val characters: List<Deferred<FavoriteCharacter>> =
+    listOf(
+        Me.getFavoriteCharacter(),
+        Taylor.getFavoriteCharacter(),
+        Michael.getFavoriteCharacter()
+    )
 
-        println(characters.awaitAll())
+println(characters.awaitAll())
     }
 }
 

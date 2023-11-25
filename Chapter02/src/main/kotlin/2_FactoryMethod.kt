@@ -1,3 +1,5 @@
+import java.lang.IllegalArgumentException
+
 fun main() {
     val queen = createPiece("qa5")
     println(queen)
@@ -25,7 +27,7 @@ fun createPiece(notation: String): ChessPiece {
         'q' -> Queen(file, rank)
         'p' -> Pawn(file, rank)
         // ...
-        else -> throw RuntimeException("Unknown piece: $type")
+        else -> throw IllegalArgumentException("Unknown piece: $type")
     }
 }
 
