@@ -14,6 +14,7 @@ fun main() {
 
     val response: Response? = Response(UserProfile(null, null))
     println(response?.profile?.firstName?.length)
+    println(response!!.profile!!.firstName!!)
 }
 
 data class Response(

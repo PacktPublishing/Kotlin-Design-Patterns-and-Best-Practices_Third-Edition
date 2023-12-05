@@ -1,14 +1,11 @@
 import kotlin.random.Random
 
 fun main() {
-    var order: PizzaOrderStatus = OrderReceived(Random.nextInt())
-    println(order)
-    order = order.nextStatus()
-    println(order)
-    order = order.nextStatus()
-    println(order)
-    order = order.nextStatus()
-    println(order)
+    var status: PizzaOrderStatus = OrderReceived(123)
+    while (status !is Completed) {
+        status = status.nextStatus()
+        println(status)
+    }
 }
 
 
@@ -26,22 +23,24 @@ fun main() {
     }
 }*/
 
-sealed class PizzaOrderStatus(protected val orderId: Int) {
-    abstract fun nextStatus(): PizzaOrderStatus
+sealed interface PizzaOrderStatus {
+    val orderId: Int
+    fun nextStatus(): PizzaOrderStatus
 }
 
-class OrderReceived(orderId: Int) : PizzaOrderStatus(orderId) {
+
+data class OrderReceived(override val orderId: Int) : PizzaOrderStatus {
     override fun nextStatus() = PizzaBeingMade(orderId)
 }
 
-class PizzaBeingMade(orderId: Int) : PizzaOrderStatus(orderId) {
+data class PizzaBeingMade(override val orderId: Int) : PizzaOrderStatus {
     override fun nextStatus() = OutForDelivery(orderId)
 }
 
-class OutForDelivery(orderId: Int) : PizzaOrderStatus(orderId) {
+data class OutForDelivery(override val orderId: Int) : PizzaOrderStatus {
     override fun nextStatus() = Completed(orderId)
 }
 
-class Completed(orderId: Int) : PizzaOrderStatus(orderId) {
+data class Completed(override val orderId: Int) : PizzaOrderStatus {
     override fun nextStatus() = this
 }
