@@ -2,16 +2,19 @@ package cats
 
 import Cat
 import CatsTable
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 interface CatsService {
     fun findAll(): List<Cat>
     fun find(id: Int): Cat?
     fun create(name: String, age: Int): EntityID<Int>
+
+    fun delete(id: Int): Int
+
+    fun update(id: Int, name: String, age: Int): Int
 }
 
 class CatsServiceImpl : CatsService {
@@ -30,7 +33,7 @@ class CatsServiceImpl : CatsService {
     override fun find(id: Int): Cat? {
         return transaction {
             val row = CatsTable.select {
-                CatsTable.id.eq(id)
+                CatsTable.id eq id
             }.firstOrNull()
 
             if (row != null) {
@@ -39,8 +42,7 @@ class CatsServiceImpl : CatsService {
                     row[CatsTable.name],
                     row[CatsTable.age]
                 )
-            }
-            else {
+            } else {
                 null
             }
         }
@@ -52,6 +54,19 @@ class CatsServiceImpl : CatsService {
                 cat[CatsTable.name] = name
                 cat[CatsTable.age] = age
             }
+        }
+    }
+
+    override fun delete(id: Int): Int {
+        return transaction {
+            CatsTable.deleteWhere { CatsTable.id eq id }
+        }
+    }
+
+    override fun update(id: Int, name: String, age: Int): Int = transaction {
+        CatsTable.update({ CatsTable.id eq id }) { cat ->
+            cat[CatsTable.name] = name
+            cat[CatsTable.age] = age
         }
     }
 }

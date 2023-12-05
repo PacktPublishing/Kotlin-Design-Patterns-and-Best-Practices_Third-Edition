@@ -1,13 +1,13 @@
 import cats.CatsServiceImpl
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 
 fun main() {
     embeddedServer(
@@ -24,7 +24,7 @@ fun Application.mainModule() {
         SchemaUtils.create(CatsTable)
     }
 
-    install(ContentNegotiation) {
+    install(ServerContentNegotiation) {
         json()
     }
     val catsService = CatsServiceImpl()
