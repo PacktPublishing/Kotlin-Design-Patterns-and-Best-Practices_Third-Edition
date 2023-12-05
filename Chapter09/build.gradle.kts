@@ -21,8 +21,8 @@ tasks.test {
     useJUnit()
 }
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "17"
+kotlin {
+    jvmToolchain(17)
 }
 
 tasks.withType<KotlinCompile> {
