@@ -6,7 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Routing.cats(service: CatsService) {
+fun Routing.catsRoutes(service: CatsService) {
     route("/cats") {
         post {
             val parameters: Parameters = call.receiveParameters()
@@ -21,7 +21,6 @@ fun Routing.cats(service: CatsService) {
         }
         get("/{id}") {
             val id = requireNotNull(call.parameters["id"]).toInt()
-
             val cat = service.find(id)
 
             if (cat == null) {

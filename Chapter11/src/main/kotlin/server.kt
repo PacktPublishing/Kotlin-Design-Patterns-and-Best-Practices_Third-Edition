@@ -32,7 +32,7 @@ fun Application.mainModule() {
         get("/status") {
             call.respond(mapOf("status" to "OK"))
         }
-        cats(catsService)
+        catsRoutes(catsService)
     }
     println("open http://localhost:8080")
 }

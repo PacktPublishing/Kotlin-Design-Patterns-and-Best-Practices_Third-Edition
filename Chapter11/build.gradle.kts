@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.0-Beta1"
-    application
     kotlin("plugin.serialization") version "2.0.0-Beta1"
+    application
 }
 
 group = "me.soshin"
@@ -33,4 +33,8 @@ tasks.test {
 
 application {
     mainClass.set("ServerKt")
+}
+
+kotlin {
+    jvmToolchain(17)
 }

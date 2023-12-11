@@ -105,40 +105,40 @@ class ServerTest {
             }
         }
 
-        @Test
-        fun `DELETE deletes a cat`() {
-            testApplication {
-                application {
-                    mainModule()
-                }
-                val response = client.delete("/cats/$id")
-                assertEquals(HttpStatusCode.OK, response.status)
-
-                val deletedResponse = client.get("/cats/$id")
-                assertEquals(HttpStatusCode.NotFound, deletedResponse.status)
-            }
+@Test
+fun `DELETE deletes a cat`() {
+    testApplication {
+        application {
+            mainModule()
         }
+        val response = client.delete("/cats/$id")
+        assertEquals(HttpStatusCode.OK, response.status)
 
-        @Test
-        fun `PUT updates a cat`() {
-            testApplication {
-                application {
-                    mainModule()
-                }
-                val response = client.put("/cats/$id") {
-                    header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
-                    setBody(
-                        listOf(
-                            "name" to "Meatloaf",
-                            "age" to 4.toString()
-                        ).formUrlEncode()
-                    )
-                }
-                assertEquals(HttpStatusCode.OK, response.status)
+        val deletedResponse = client.get("/cats/$id")
+        assertEquals(HttpStatusCode.NotFound, deletedResponse.status)
+    }
+}
 
-                val updatedResponse = client.get("/cats/$id")
-                assertEquals("""{"id":$id,"name":"Meatloaf","age":4}""", updatedResponse.bodyAsText())
-            }
+@Test
+fun `PUT updates a cat`() {
+    testApplication {
+        application {
+            mainModule()
         }
+        val response = client.put("/cats/$id") {
+            header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
+            setBody(
+                listOf(
+                    "name" to "Meatloaf",
+                    "age" to 4.toString()
+                ).formUrlEncode()
+            )
+        }
+        assertEquals(HttpStatusCode.OK, response.status)
+
+        val updatedResponse = client.get("/cats/$id")
+        assertEquals("""{"id":$id,"name":"Meatloaf","age":4}""", updatedResponse.bodyAsText())
+    }
+}
     }
 }
