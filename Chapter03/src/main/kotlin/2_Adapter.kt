@@ -1,5 +1,4 @@
 import java.util.stream.Stream
-import kotlin.streams.toList
 
 fun main() {
     // This code won't work
@@ -45,7 +44,7 @@ fun <T> streamProcessing(stream: Stream<T>) {
 }
 
 fun USPlug.toEUPlug(): EUPlug {
-    val hasPower = if (this.hasPower == 1) "TRUE" else "FALSE"
+    val hasPower = if (this.hasPower == 1) "YES" else "NO"
     return object : EUPlug {
         // Transfer power
         override val hasPower = hasPower
@@ -53,7 +52,7 @@ fun USPlug.toEUPlug(): EUPlug {
 }
 
 fun UsbMini.toUsbTypeC(): UsbTypeC {
-    val hasPower = this.hasPower == Power.TRUE
+    val hasPower = this.hasPower == PowerState.TRUE
     return object : UsbTypeC {
         override val hasPower = hasPower
     }
@@ -69,7 +68,8 @@ fun usPowerOutlet(): USPlug {
 // Charger accepts EUPlug interface and exposes UsbMini interface
 fun charger(plug: EUPlug): UsbMini {
     return object : UsbMini {
-        override val hasPower = Power.valueOf(plug.hasPower)
+        override val hasPower = if (plug.hasPower == "YES")
+            PowerState.TRUE else PowerState.FALSE
     }
 }
 
@@ -86,15 +86,15 @@ interface USPlug {
 }
 
 interface EUPlug {
-    val hasPower: String // "TRUE" or "FALSE"
+    val hasPower: String // "YES" or "NO"
 }
 
 
 interface UsbMini {
-    val hasPower: Power
+    val hasPower: PowerState
 }
 
-enum class Power {
+enum class PowerState {
     TRUE, FALSE
 }
 
