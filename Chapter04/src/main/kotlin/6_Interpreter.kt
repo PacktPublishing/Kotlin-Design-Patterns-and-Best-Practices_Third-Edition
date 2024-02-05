@@ -1,6 +1,6 @@
 fun main() {
 
-    val sql = select("name, age") {
+    val sql = select("name", "age") {
         from("users") {
             where("age > 25")
         } // Closes from
@@ -9,12 +9,13 @@ fun main() {
     println(sql) // "SELECT name, age FROM users WHERE age > 25"
 }
 
-fun select(columns: String, from: SelectClause.() -> Unit):
+fun select(vararg columns: String, from: SelectClause.() -> Unit):
         SelectClause {
-    return SelectClause(columns).apply(from)
+    return SelectClause(*columns).apply(from)
 }
 
-class SelectClause(private val columns: String) {
+@SqlDslMarker
+class SelectClause(private vararg val columns: String) {
     private lateinit var from: FromClause
     fun from(
         table: String,
@@ -24,9 +25,10 @@ class SelectClause(private val columns: String) {
         return this.from.apply(where)
     }
 
-    override fun toString() = "SELECT $columns $from"
+    override fun toString() = "SELECT ${columns.joinToString(separator = ", ")} $from"
 }
 
+@SqlDslMarker
 class FromClause(private val table: String) {
     private lateinit var where: WhereClause
 
@@ -37,6 +39,10 @@ class FromClause(private val table: String) {
     override fun toString() = "FROM $table $where"
 }
 
+@SqlDslMarker
 class WhereClause(private val conditions: String) {
     override fun toString() = "WHERE $conditions"
 }
+
+@DslMarker
+annotation class SqlDslMarker
