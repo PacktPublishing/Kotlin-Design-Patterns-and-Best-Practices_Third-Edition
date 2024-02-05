@@ -45,9 +45,7 @@ fun handleRequest(r: Request) {
 
 val authentication = fun(next: Handler) =
     fun(request: Request): Response {
-        if (!request.isKnownEmail()) {
-            throw IllegalArgumentException()
-        }
+        require(request.isKnownEmail()) { "Unknown email address" }
         return next(request)
     }
 
