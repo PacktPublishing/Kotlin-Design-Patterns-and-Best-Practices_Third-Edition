@@ -8,7 +8,7 @@ fun main() {
         think("No, actually, let's implement Pineapple Launcher")
     }
     michael.printThoughts()
-    michael.`what was I thinking back then?`(memento)
+    michael.recall(memento)
     michael.printThoughts()
 }
 
@@ -29,7 +29,7 @@ class Manager {
         return Memory(thoughts.toList())
     }
 
-    fun `what was I thinking back then?`(memory: Memory) {
+    fun recall(memory: Memory) {
         memory.restore()
     }
 
