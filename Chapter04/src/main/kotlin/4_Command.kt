@@ -6,10 +6,17 @@ fun main() {
     t.addOrder(moveGenerator(t, 3, 3))
 
     t.executeOrders()
+
+    t.appendMove(0, 4)
+    .appendMove(5, 4)
+    .appendMove(5, 8)
+    .appendMove(10, 8)
+    .executeOrders()
 }
 
 open class Trooper {
     private val orders = mutableListOf<Command>()
+    private val undoableOrders = mutableListOf<Pair<Command, Command>>()
 
     fun addOrder(order: Command) {
         this.orders.add(order)
@@ -21,6 +28,15 @@ open class Trooper {
             order() // Compile error for now
         }
     }
+
+    fun appendMove(x: Int, y: Int): Trooper = apply {
+
+        orders.add(moveGenerator(this, x, y))
+
+        undoableOrders.add(moveGenerator(this, x, y) to moveGenerator(this, -x, -y))
+
+    }
+
     // More code here
 
     fun move(x: Int, y: Int) {
@@ -31,11 +47,11 @@ open class Trooper {
 typealias Command = () -> Unit
 
 val moveGenerator = fun(
-    s: Trooper,
+    t: Trooper,
     x: Int,
     y: Int
 ): Command {
     return fun() {
-        s.move(x, y)
+        t.move(x, y)
     }
 }
