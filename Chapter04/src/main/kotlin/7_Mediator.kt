@@ -8,7 +8,7 @@ interface ProductManager {
     fun isAllGood(majorRelease: Boolean): Boolean
 }
 
-object Michael : Canary, ProductManager {
+object Michael : ProductManager {
     private val kenny = Kenny(this)
     private val brad = Brad(this)
 
@@ -22,9 +22,6 @@ object Michael : Canary, ProductManager {
     }
 }
 
-interface Canary {
-
-}
 
 interface QA {
     fun doesMyCodeWork(): Boolean
