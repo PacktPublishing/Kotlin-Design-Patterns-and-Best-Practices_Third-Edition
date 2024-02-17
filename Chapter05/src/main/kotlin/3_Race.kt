@@ -2,7 +2,12 @@ import kotlin.concurrent.thread
 
 fun main() {
 
-    val scores = listOf(Player(0))
+    val scores = listOf(Player(0), Player(0))
+scores[0].score++
+scores[0].score = 2
+
+
+    println(scores)
 
     val threads = List(2) {
         thread {

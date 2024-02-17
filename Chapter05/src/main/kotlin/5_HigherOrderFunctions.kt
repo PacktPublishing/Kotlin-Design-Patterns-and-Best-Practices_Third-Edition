@@ -28,4 +28,5 @@ fun main() {
     }
 
     dwarfs.forEach(::println)
+    dwarfs.forEach { println(it) }
 }

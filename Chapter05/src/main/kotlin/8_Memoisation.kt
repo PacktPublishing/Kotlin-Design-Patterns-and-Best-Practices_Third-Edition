@@ -8,7 +8,7 @@ fun summarizer(): (Set<Int>) -> Double {
 
 fun sum(numbers: Set<Int>): Double {
     println("Computing")
-    return numbers.sumByDouble { it.toDouble() }
+    return numbers.sumOf { it.toDouble() }
 }
 
 fun main() {

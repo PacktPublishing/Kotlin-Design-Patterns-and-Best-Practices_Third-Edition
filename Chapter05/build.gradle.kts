@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "2.0.0-Beta4"
 }
 
 group = "me.soshin"
@@ -11,6 +11,6 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType < KotlinCompile > () {
-    kotlinOptions.jvmTarget = "1.8"
+kotlin {
+    jvmToolchain(17)
 }

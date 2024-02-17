@@ -86,14 +86,14 @@ class Container(val elements: MutableList<HtmlElement> = mutableListOf()) : Html
     }
 }
 
-object Image : HtmlElement() {
+data object Image : HtmlElement() {
     val src: String
         get() = "https://some.image"
 }
 
-object Link : HtmlElement() {
+data object Link : HtmlElement() {
     val href: String
         get() = "https://some.link"
 }
 
-object Table : HtmlElement()
+data object Table : HtmlElement()

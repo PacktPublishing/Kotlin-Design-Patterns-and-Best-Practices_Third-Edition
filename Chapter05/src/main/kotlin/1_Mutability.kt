@@ -1,5 +1,3 @@
-import java.util.*
-
 fun main() {
     // Will cause ConcurrentModificationException
     printAndClear(mutableListOf("a", "b", "c"))
@@ -13,3 +11,4 @@ private fun <T> printAndClear(list: MutableList<T>) {
         list.remove(e)
     }
 }
+

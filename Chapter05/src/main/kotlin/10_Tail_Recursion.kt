@@ -17,7 +17,8 @@ fun main() {
     println(res.take(100))
 }
 
-tailrec fun mergeSort(numbers: List<Int>): List<Int> {
+// Although you can mark this function with tailrec, IntelliJ will report that it's not needed
+/* tailrec */ fun mergeSort(numbers: List<Int>): List<Int> {
     return when {
         numbers.size <= 1 -> numbers
         numbers.size == 2 -> {
@@ -29,7 +30,7 @@ tailrec fun mergeSort(numbers: List<Int>): List<Int> {
         }
         else -> {
             val left = mergeSort(numbers.slice(0..numbers.size / 2))
-            val right = mergeSort(numbers.slice(numbers.size / 2 + 1 until numbers.size))
+            val right = mergeSort(numbers.slice((numbers.size / 2 + 1) ..< numbers.size))
             return merge(left, right)
         }
     }
