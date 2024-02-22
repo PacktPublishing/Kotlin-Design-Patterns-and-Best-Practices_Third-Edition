@@ -3,24 +3,22 @@ import kotlin.system.measureTimeMillis
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
-fun main() {
-    runBlocking {
-        val t1 = measureTimeMillis {
-            Blocking.profile("123")
-        }
-
-        val t2 = measureTimeMillis {
-            Async().profile("123")
-        }
-
-        val t3 = measureTimeMillis {
-            Suspend().profile("123")
-        }
-
-        println("Blocking code: $t1")
-        println("Async: $t2")
-        println("Suspend: $t3")
+suspend fun main() {
+    val t1 = measureTimeMillis {
+        Blocking.profile("123")
     }
+
+    val t2 = measureTimeMillis {
+        Async().profile("123")
+    }
+
+    val t3 = measureTimeMillis {
+        Suspend().profile("123")
+    }
+
+    println("Blocking code: $t1")
+    println("Async: $t2")
+    println("Suspend: $t3")
 }
 
 class Blocking {
@@ -50,6 +48,7 @@ class Blocking {
 }
 
 class Async {
+    private val scope = CoroutineScope(Dispatchers.Default)
     suspend fun profile(id: String): Profile {
         val bio = fetchBioOverHttpAsync(id) // takes 1s
         val picture = fetchPictureFromDBAsync(id) // takes 100ms
@@ -57,18 +56,18 @@ class Async {
         return Profile(bio.await(), picture.await(), friends.await())
     }
 
-    private fun fetchFriendsFromDBAsync(id: String) = GlobalScope.async {
+    private fun fetchFriendsFromDBAsync(id: String) = scope.async {
         delay(500)
         emptyList<String>()
     }
 
     private fun fetchPictureFromDBAsync(id: String) =
-        GlobalScope.async {
+        scope.async {
             delay(100)
             null
         }
 
-    private fun fetchBioOverHttpAsync(id: String) = GlobalScope.async {
+    private fun fetchBioOverHttpAsync(id: String) = scope.async {
         delay(1000)
         "Alexey Soshin, Software Architect"
     }

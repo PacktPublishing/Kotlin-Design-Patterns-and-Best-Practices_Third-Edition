@@ -55,14 +55,29 @@ class Snail : WhatCanHappen {
     }
 }
 
+/*
 sealed class Mood {
     // Some abstract methods here, like draw(), for example
 }
 
-object Still : Mood()
+data object Still : Mood()
 
-object Aggressive : Mood()
+data object Aggressive : Mood()
 
-object Retreating : Mood()
+data object Retreating : Mood()
 
-object Dead : Mood()
+data object Dead : Mood()*/
+
+sealed interface Mood {
+    // Some abstract methods here, like draw(), for example
+}
+
+data object Still : Mood {
+    
+}
+
+data object Aggressive : Mood
+
+data object Retreating : Mood
+
+data object Dead : Mood

@@ -2,7 +2,6 @@ import kotlinx.coroutines.*
 import java.util.*
 
 fun main() {
-
     runBlocking {
         val job: Deferred<UUID> = fastUuidAsync()
         println(job.await())

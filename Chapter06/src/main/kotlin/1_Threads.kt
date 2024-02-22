@@ -2,9 +2,19 @@ import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 fun main() {
-    startingThreads()
-    threadRace()
-    synchronisingThreads()
+    //startingThreads()
+   // threadRace()
+  //  synchronisingThreads()
+    daemonThread()
+}
+
+fun daemonThread() {
+    thread(isDaemon = true) {
+        for (i in 1..1_000_000) {
+            println("daemon thread says: $i")
+        }
+    }
+    Thread.sleep(10)
 }
 
 fun synchronisingThreads() {
@@ -32,10 +42,8 @@ fun threadRace() {
     repeat(100) {
         thread {
             repeat(1000) {
-                //synchronized(latch) {
                 counter++
                 latch.countDown()
-                //}
             }
         }
     }
