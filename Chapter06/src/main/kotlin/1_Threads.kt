@@ -2,9 +2,9 @@ import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 fun main() {
-    //startingThreads()
-   // threadRace()
-  //  synchronisingThreads()
+    startingThreads()
+    threadRace()
+    synchronisingThreads()
     daemonThread()
 }
 
