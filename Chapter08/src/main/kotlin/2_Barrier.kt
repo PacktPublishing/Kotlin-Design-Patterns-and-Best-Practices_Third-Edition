@@ -3,6 +3,27 @@ import kotlin.random.Random
 import kotlin.system.measureTimeMillis
 
 fun main() {
+    barrierWithSuccess()
+    barrierWithFailure()
+}
+
+fun barrierWithFailure() {
+runBlocking {
+    val characters: List<Deferred<FavoriteCharacter>> =
+        listOf(
+            Me.getFavoriteCharacter(),
+            GrumpyCat.getFavoriteCharacter()
+        )
+
+    try {
+        println(characters.awaitAll())
+    } catch (e: RuntimeException) {
+        println("Caught exception: ${e.message}")
+    }
+}
+}
+
+fun barrierWithSuccess() {
     runBlocking {
         println(measureTimeMillis {
             fetchFavoriteCharacterWrong("Inigo Montoya")
@@ -12,20 +33,20 @@ fun main() {
         })
         val (name, catchphrase, _) = fetchFavoriteCharacterCorrect("Inigo Montoya")
         println("$name says: $catchphrase")
-val characters: List<Deferred<FavoriteCharacter>> =
-    listOf(
-        Me.getFavoriteCharacter(),
-        Taylor.getFavoriteCharacter(),
-        Michael.getFavoriteCharacter()
-    )
+        val characters: List<Deferred<FavoriteCharacter>> =
+            listOf(
+                Me.getFavoriteCharacter(),
+                Taylor.getFavoriteCharacter(),
+                Michael.getFavoriteCharacter()
+            )
 
-println(characters.awaitAll())
+        println(characters.awaitAll())
     }
 }
 
 suspend fun fetchFavoriteCharacterWrong(name: String) = coroutineScope {
     val catchphrase = getCatchphraseAsync(name).await()
-    val picture = getPicture(name).await()
+    val picture = getPictureAsync(name).await()
 
     FavoriteCharacter(name, catchphrase, picture)
 }
@@ -34,7 +55,7 @@ suspend fun fetchFavoriteCharacterCorrect(
     name: String
 ) = coroutineScope {
     val catchphrase = getCatchphraseAsync(name)
-    val picture = getPicture(name)
+    val picture = getPictureAsync(name)
 
     FavoriteCharacter(name, catchphrase.await(), picture.await())
 }
@@ -56,7 +77,7 @@ fun CoroutineScope.getCatchphraseAsync(
     }
 }
 
-fun CoroutineScope.getPicture(
+fun CoroutineScope.getPictureAsync(
     characterName: String
 ) = async {
     // Simulate network call
@@ -89,4 +110,11 @@ object Me {
             FavoriteCharacter("Inigo Montoya", "Hello, my name is...")
         }
     }
+}
+
+object GrumpyCat {
+    fun getFavoriteCharacter(): Deferred<FavoriteCharacter> =
+        CompletableDeferred<FavoriteCharacter>().apply {
+            completeExceptionally(RuntimeException("Grumpy cat likes no one"))
+        }
 }

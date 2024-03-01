@@ -3,6 +3,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 fun main() {
+    mutexWithLock()
+}
+
+fun mutexWithLock() {
     runBlocking {
         var counter = 0
         val mutex = Mutex()
