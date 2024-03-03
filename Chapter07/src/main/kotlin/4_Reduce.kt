@@ -15,13 +15,21 @@ fun reduce() {
 fun reduceReactive(numbers: IntRange) {
     val reduced: Int = (1..100).reduce { sum, n -> sum + n }
     println("reduced: $reduced")
+
+    val concatenated = listOf("Hello", "Kotlin", "!").reduce { agg, s -> "$agg $s" }
+    println(concatenated)
+
+    val factorial = (1..5).reduce { product, n -> product * n}
+    println(factorial)
+
+    (1..5).forEach {  }
 }
 
 fun fold() {
     val folded: Int = (1..100).fold(10) { sum, n -> sum + n }
     println("folded: $folded")
 
-    val foldedLong: Long = (1..15).fold(1L) { acc, n -> acc * n }
+    val foldedLong: Long = (1..15).fold(1) { acc, n -> acc * n }
     println("foldedLong: $foldedLong")
 }
 
