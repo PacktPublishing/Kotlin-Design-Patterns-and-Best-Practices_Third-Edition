@@ -1,11 +1,27 @@
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 fun main() {
+    flowsAndExceptions()
+    flowOnExample()
+}
+
+fun flowOnExample() =
+runBlocking {
+    val moreNumbersFlow = (1..10).asFlow()
+
+    moreNumbersFlow.map {
+        println("Mapping on ${Thread.currentThread().name}")
+        it * it
+    }.flowOn(Dispatchers.Default).collect {
+        println("Got $it on ${Thread.currentThread().name}")
+    }
+}
+
+fun flowsAndExceptions() {
     runBlocking {
         val numbersFlow: Flow<Int> = flow {
             println("New subscriber!")
@@ -17,6 +33,8 @@ fun main() {
                 }
             }
         }
+
+
 
         (1..4).forEach { coroutineId ->
             delay(5000)
@@ -31,5 +49,6 @@ fun main() {
                 }
             }
         }
+
     }
 }

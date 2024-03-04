@@ -4,10 +4,10 @@ fun main() {
     val ascii = mutableListOf<Int>()
 
     for (l in letters) {
-        ascii.add(l.toInt())
+        ascii.add(l.code)
     }
 
     println(ascii)
-    val result: List<Int> = ('a'..'z').map { it.toInt() }
+    val result: List<Int> = ('a'..'z').map { it.code }
     println(result)
 }

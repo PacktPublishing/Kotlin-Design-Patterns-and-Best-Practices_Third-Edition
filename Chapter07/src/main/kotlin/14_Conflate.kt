@@ -1,7 +1,5 @@
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 
 fun main() {
@@ -20,5 +18,10 @@ fun main() {
             seconds++
             println("$seconds seconds -> received $number")
         }
+
+        val debouncedFlow = stock.debounce(300L)
+
+        val sampleFlow = stock.sample(300L)
+
     }
 }
