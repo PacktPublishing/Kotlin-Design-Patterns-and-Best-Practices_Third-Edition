@@ -1,20 +1,17 @@
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 fun main() {
     runBlocking {
         // Prints DeferredCoroutine{Active}
-        println("${getResult()}")
+        println("Result: ${getResult()}")
 
         // Prints "OK"
-        println(getResultAsync().await())
+        println("Result: ${getResultAsync().await()}")
     }
 }
 
 // This will produce a warning
-fun CoroutineScope.getResult() = async {
+fun CoroutineScope.getResult(): Deferred<String> = async {
     delay(100)
     "OK"
 }

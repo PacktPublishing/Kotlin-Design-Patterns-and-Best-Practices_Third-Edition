@@ -1,12 +1,17 @@
 fun main() {
-    printNameLength(Profile(null))
+    try {
+        printNameLength(UserProfile(null, null))
+    } catch (e: IllegalArgumentException) {
+        println(e)
+    }
+    printNameLength(UserProfile("Kim", null))
 }
 
-fun printNameLength(p: Profile) {
-    requireNotNull(p.firstName)
+fun printNameLength(p: UserProfile) {
+    requireNotNull(p.firstName) { "First name must not be null" }
+    requireNotNull(p.lastName)
+    println(p.firstName.length + 1 + p.lastName.length)
 }
-
-data class Profile(val firstName: String?)
 
 class HttpClient {
     var body: String? = null

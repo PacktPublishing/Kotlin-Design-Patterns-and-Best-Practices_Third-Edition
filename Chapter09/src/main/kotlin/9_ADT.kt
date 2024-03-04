@@ -10,11 +10,13 @@ fun main() {
 
     println(tree)
     println(tree.sum())
+
+    deeplyRecursive()
 }
 
 sealed interface Tree<out T>
 
-object Empty : Tree<Nothing> {
+data object Empty : Tree<Nothing> {
     override fun toString() = "E"
 }
 
@@ -35,4 +37,26 @@ data class Node<T>(
 fun Tree<Int>.sum(): Long = when (this) {
     Empty -> 0
     is Node -> value + left.sum() + right.sum()
+}
+
+fun deeplyRecursive() {
+    var t = Node(1)
+    repeat(1_000_000) {
+        t = Node(1, Empty, t)
+    }
+
+    println(t.deepSum())
+}
+
+
+
+fun Tree<Int>.deepSum(): Long {
+    return DeepRecursiveFunction<Tree<Int>, Long> { tree ->
+        when (tree) {
+            Empty -> 0
+            is Node -> tree.value +
+                    callRecursive(tree.left) +
+                    callRecursive(tree.right)
+        }
+    }(this)
 }

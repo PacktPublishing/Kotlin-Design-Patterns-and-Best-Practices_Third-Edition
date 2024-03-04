@@ -1,14 +1,12 @@
 fun main() {
-    val `007` = JamesBond().apply {
-        name = "Sean Connery"
-        movie = "Dr. No"
+    val bestSeanConneryMovie = JamesBondMovie().apply {
+        movieName = "From Ukraine with Love"
     }
 
-    println(`007`.name)
+    println("${bestSeanConneryMovie.movieName}: ${bestSeanConneryMovie.actorName}")
 }
 
-class JamesBond {
-    lateinit var name: String
-    lateinit var movie: String
-    lateinit var alsoStarring: String
-}
+data class JamesBondMovie(
+    var actorName: String = "Sean Connery",
+    var movieName: String = "From Russia with Love"
+)
