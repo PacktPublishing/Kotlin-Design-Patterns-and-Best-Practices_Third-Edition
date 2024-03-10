@@ -1,8 +1,10 @@
+import java.util.*
+
 fun main() {
-    val lowerCaseName = JamesBond().run {
-        name = "ROGER MOORE"
-        movie = "THE MAN WITH THE GOLDEN GUN"
-        name.toLowerCase() // <= Not JamesBond type
+    val lowerCaseName = JamesBondMovie().run {
+        actorName = "ROGER MOORE"
+        movieName = "THE MAN WITH THE GOLDEN GUN"
+        actorName.lowercase(Locale.getDefault()) // <= Not JamesBond type
     }
 
     println(lowerCaseName)

@@ -1,6 +1,6 @@
 fun main() {
-    with(JamesBond()) {
-        name = "Pierce Brosnan"
-        println(this.name)
+    with(JamesBondMovie()) {
+        actorName = "Pierce Brosnan"
+        println(this.actorName)
     }
 }
