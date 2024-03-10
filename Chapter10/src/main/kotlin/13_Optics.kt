@@ -12,19 +12,21 @@ fun main() {
         )
     )
 
-    val donutBoxCorrectAllergens = donutBox.copy(
+    val donutBoxCorrectAllergensCopy = donutBox.copy(
         donuts = donutBox.donuts.map { donut ->
             donut.copy(allergens = donut.allergens + "Wheat")
         }
     )
 
-    println(donutBoxCorrectAllergens)
+    println(donutBoxCorrectAllergensCopy)
 
-    println(DonutBoxOptics.donuts.modify(donutBox) { donuts ->
+    val donutBoxCorrectAllergensOptics = DonutBoxOptics.donuts.modify(donutBox) { donuts ->
         donuts.map { donut ->
             DonutOptics.allergens.modify(donut) { allergens -> allergens + "Wheat" }
         }
-    })
+    }
+
+    println(donutBoxCorrectAllergensOptics)
 
     val donutBoxAllergensOptics =
         DonutBoxOptics.donuts.every(Every.list()) compose DonutOptics.allergens

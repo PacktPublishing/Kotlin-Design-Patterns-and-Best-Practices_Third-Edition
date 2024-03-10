@@ -5,9 +5,10 @@ import arrow.core.raise.*
 
 fun main() {
     val box = DonutBoxRaise(2)
+    // Add donuts to the box
     fold({
-        box.addDonut(Donut("TONGAN VANILLA BEAN CUSTARD", 1000, listOf("Wheat", "Milk")))
-            .addDonut(Donut("SRI LANKAN CINNAMON SUGAR", 800, listOf("Wheat")))
+        addDonut(box, Donut("TONGAN VANILLA BEAN CUSTARD", 1000, listOf("Wheat", "Milk")))
+        addDonut(box, Donut("SRI LANKAN CINNAMON SUGAR", 800, listOf("Wheat")))
     }, {}, {})
 
     mapAndAccumulate(box)
@@ -16,6 +17,7 @@ fun main() {
 
 
 fun mapAndAccumulate(box: DonutBoxRaise) {
+    println("mapAndAccumulate: ")
     val res: Either<NonEmptyList<DonutIssue>, List<Donut>> =
         box.donuts.mapOrAccumulate { caloriesChecker(700, it) }
 
@@ -29,6 +31,7 @@ fun mapAndAccumulate(box: DonutBoxRaise) {
 }
 
 fun zipAndAccumulate(box: DonutBoxRaise) {
+    println("zipAndAccumulate: ")
     val res: List<Either<NonEmptyList<DonutIssue>, Donut>> =
         box.donuts.map {
             either {

@@ -7,6 +7,40 @@ fun main() {
     withEither()
     withRaise()
     withResult()
+    withIor()
+    withEitherBind()
+    withEitherCatch()
+}
+
+fun withEitherCatch() {
+    val either: Either<Throwable, Donut> = Either.catch {
+        val donutBox = DonutBox(0)
+
+        donutBox.removeDonut("SRI LANKAN CINNAMON SUGAR") ?: throw NoSuchDonutException()
+    }
+}
+
+fun withEitherBind() {
+    val result: Either<Any, Donut> = either {
+        // Unwrap Either<NonPositiveCapacity, DonutBoxEither> to DonutBoxEither or raise NonPositiveCapacity
+        val box: DonutBoxEither = DonutBoxEither(1).bind()
+
+        // Unwrap Either<NoSpaceInBox, DonutBoxEither> to DonutBoxEither or raise NoSpaceInBox
+        box.addDonut(
+            Donut(
+                "TONGAN VANILLA BEAN CUSTARD",
+                1000,
+                listOf("Milk", "Wheat")
+            )
+        ).bind()
+
+        // Unwrapped Either<NoSuchDonut, Donut> to Donut or raise NoSuchDonut
+        box.removeDonut("SRI LANKAN CINNAMON SUGAR").bind()
+    }
+    when (result) {
+        is Either.Left -> println(result.value)
+        is Either.Right -> println("I've got ${result.value.name}")
+    }
 }
 
 fun withEither() {
@@ -28,6 +62,29 @@ fun withEither() {
                 }
             }
         }
+    }
+}
+
+fun withIor() {
+    val box = DonutBoxIor(0)
+    when (val addDonutResult = box.addDonut(
+        Donut(
+            "TONGAN VANILLA BEAN CUSTARD",
+            1000,
+            listOf("Milk", "Wheat")
+        )
+    )) {
+        is Ior.Both -> {
+            println("Added a donut successfully to ${addDonutResult.rightValue}, but got warning: ${addDonutResult.leftValue}")
+            when (val result = box.removeDonut("SRI LANKAN CINNAMON SUGAR")) {
+                is Ior.Both -> TODO()
+                is Ior.Left -> println("No donut for me")
+                is Ior.Right -> println("I've got ${result.value.name}")
+            }
+        }
+
+        is Ior.Left -> println("No space in box")
+        is Ior.Right -> TODO()
     }
 }
 
@@ -62,6 +119,7 @@ fun withRaise() {
     val box = DonutBoxRaise(1)
 
     fold(
+        // Computation block
         {
             addDonut(
                 box,
@@ -71,9 +129,13 @@ fun withRaise() {
                     listOf("Milk", "Wheat"),
                 )
             )
-        }, {
+        },
+        // Failure block
+        {
             println("No space in box")
-        }, {
+        },
+        // Success block
+        {
             fold(
                 {
                     removeDonut(box, "SRI LANKAN CINNAMON SUGAR")
@@ -224,10 +286,14 @@ class DonutBoxIor(private val capacity: Int) {
     private val donuts = mutableListOf<Donut>()
 
     fun addDonut(donut: Donut): Ior<BoxError, DonutBoxIor> =
-        ior(combineError = { _, both -> both }) {
+        ior(combineError = { _: BoxError, both: BoxError ->
+            println("Hello")
+            both
+        }) {
             ensure(
-                donuts.size <= capacity
+                donuts.size < capacity
             ) { NoSpaceInBox }
+
             donuts.add(donut)
 
             return if (donuts.size == capacity) {
@@ -240,7 +306,7 @@ class DonutBoxIor(private val capacity: Int) {
     fun removeDonut(name: String): Ior<NoSuchDonut, Donut> {
         return donuts.find { it.name == name }?.let {
             donuts.remove(it)
-            return (NoSuchDonut(name) to it).bothIor()
+            return (it).rightIor()
         } ?: NoSuchDonut(name).leftIor()
     }
 }

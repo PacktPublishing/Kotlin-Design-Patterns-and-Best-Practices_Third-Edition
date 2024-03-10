@@ -11,7 +11,7 @@ suspend fun main() {
             { Taylor.getFavoriteCharacter().await() },
             { Michael.getFavoriteCharacter().await() }
         ) { me, taylor, michael ->
-            println("Favorite characters are: ${me}, ${taylor}, ${michael}")
+            println("Favorite characters are: $me, $taylor, $michael")
         }
     }
     println("Took ${t}ms")

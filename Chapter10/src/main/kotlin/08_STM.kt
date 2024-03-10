@@ -2,16 +2,18 @@ import arrow.fx.stm.*
 import kotlin.random.Random
 
 suspend fun main() {
-    val myBox: TVar<DonutBoxSTM> =
-        DonutBoxSTM(Donut("Rum&pecan caramel donut", 1000))
-    val yourBox = DonutBoxSTM()
+    /*
+        val myBox: TVar<DonutBoxSTM> =
+            DonutBoxSTM(Donut("Rum&pecan caramel donut", 1000))
+        val yourBox = DonutBoxSTM()
 
-    atomically {
-        giveDonut(myBox, yourBox, "Rum&pecan caramel donut")
-    }
+        atomically {
+            giveDonut(myBox, yourBox, "Rum&pecan caramel donut")
+        }
 
-    println(myBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
-    println(yourBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
+        println(myBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
+        println(yourBox.unsafeRead().checkDonut("Rum&pecan caramel donut"))
+    */
 
     exampleTSet()
     exampleRetry()
@@ -45,8 +47,10 @@ suspend fun exampleTSet() {
 
     }
     atomically {
-        println(set.member("a"))
-        println(set.member("c"))
+        println(set.member("a")) // true
+        println(set.member("b")) // true
+        println(set.member("c")) // false
+        println(set.member("d")) // false
     }
 
 }

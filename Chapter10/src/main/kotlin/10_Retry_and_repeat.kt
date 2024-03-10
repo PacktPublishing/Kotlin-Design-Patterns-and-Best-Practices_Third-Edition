@@ -3,10 +3,11 @@ import arrow.resilience.retry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 suspend fun main() {
-    retryExample()
+    // retryExample()
 
     val successThenFailure = sequence {
         yield { "OK" }
@@ -17,9 +18,13 @@ suspend fun main() {
         }
     }.iterator()
 
-    Schedule.recurs<Unit>(10).repeatOrElse({
+    val scheduleResult = Schedule.recurs<Unit>(10).repeatOrElse({
         println(successThenFailure.next()())
-    }, { t, l -> println("Failed on attempt $l with $t"); -1 })
+    }, { t: Throwable, attempts: Long? ->
+        println("Failed on attempt ${attempts?.inc() ?: 0} with $t")
+        -1
+    })
+    println(scheduleResult)
 }
 
 suspend fun retryExample() {
@@ -41,6 +46,7 @@ fun serverResponses(): Flow<String> {
             lastErrorTime = System.currentTimeMillis()
             throw RuntimeException("Something went wrong")
         } else {
+            println("Server is up")
             emit("OK")
         }
     }

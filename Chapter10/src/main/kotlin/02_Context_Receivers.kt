@@ -6,6 +6,7 @@ fun main() {
     val box = DonutBoxRaise(1)
 
     fold(
+        // Computation block
         {
             box.addDonut(
                 Donut(
@@ -18,9 +19,12 @@ fun main() {
         catch = {
 
         },
-        {
+        // Failure block
+        { _: NoSpaceInBox ->
             println("No space in box")
-        }, {
+        },
+        // Success block
+        {
             fold(
                 {
                     box.removeDonut("SRI LANKAN CINNAMON SUGAR")

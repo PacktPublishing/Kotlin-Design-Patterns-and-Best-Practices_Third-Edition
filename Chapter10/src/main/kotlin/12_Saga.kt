@@ -17,7 +17,9 @@ suspend fun main() {
         }
         saga({
             passToCourier(box)
-        }) {}
+        }) {
+            println("I wasted so much time and the courier never came!")
+        }
     }
     try {
         sendDonutsSaga.transact()

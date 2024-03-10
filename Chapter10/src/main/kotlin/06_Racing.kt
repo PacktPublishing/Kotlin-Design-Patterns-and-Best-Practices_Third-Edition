@@ -8,7 +8,7 @@ import kotlin.random.Random
 suspend fun main() {
     val winner: Pair<String, String> = raceN(
         { preciseWeather() },
-        { weatherToday() }
+        { weatherToday() },
     ).merge()
 
     println("Winner: $winner")

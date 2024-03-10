@@ -24,7 +24,7 @@ suspend fun main() {
         fetchAsync("https://en.wikipedia.org/wiki/$it")
     }.toList()
 
-    println(wikiArticles[1]) // Probably not B
+    println(wikiArticlesUnordered[1]) // Probably not B
 
     val wikiArticleOrTimeout: Either<NonEmptyList<RuntimeException>, List<String>> =
         tasks.parMapOrAccumulate { letter ->
