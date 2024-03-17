@@ -1,4 +1,7 @@
-import cats.CatsServiceImpl
+package com.example
+
+import com.example.cats.CatsServiceImpl
+import com.example.plugins.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
@@ -13,12 +16,13 @@ fun main() {
     embeddedServer(
         CIO,
         port = 8080,
-        module = Application::mainModule
+        module = Application::module
     ).start(wait = true)
 }
 
-fun Application.mainModule() {
-    DB.connect()
+fun Application.module() {
+
+    DB.connect(environment.config)
 
     transaction {
         SchemaUtils.create(CatsTable)
@@ -27,13 +31,6 @@ fun Application.mainModule() {
     install(ServerContentNegotiation) {
         json()
     }
-    val catsService = CatsServiceImpl()
-    routing {
-        get("/status") {
-            call.respond(mapOf("status" to "OK"))
-        }
-        catsRoutes(catsService)
-    }
-    println("open http://localhost:8080")
+    configureRouting()
 }
 

@@ -1,7 +1,7 @@
-package cats
+package com.example.cats
 
-import Cat
-import CatsTable
+import com.example.Cat
+import com.example.CatsTable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

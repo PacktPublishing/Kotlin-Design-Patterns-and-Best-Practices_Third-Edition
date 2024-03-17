@@ -1,4 +1,4 @@
-import cats.CatsService
+package com.example.cats
 
 import io.ktor.server.application.*
 import io.ktor.http.*

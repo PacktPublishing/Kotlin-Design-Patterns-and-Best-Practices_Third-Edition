@@ -1,7 +1,8 @@
 plugins {
-    kotlin("jvm") version "2.0.0-Beta2"
-    kotlin("plugin.serialization") version "2.0.0-Beta2"
+    kotlin("jvm") version "2.0.0-Beta4"
+    kotlin("plugin.serialization") version "2.0.0-Beta4"
     application
+    id("io.ktor.plugin") version "2.3.9"
 }
 
 group = "me.soshin"
@@ -11,20 +12,19 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "2.3.6"
-val exposedVersion = "0.45.0"
+val exposedVersion = "0.48.0"
 dependencies {
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-server-cio:$ktorVersion")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty")
+    implementation("io.ktor:ktor-server-cio")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("org.postgresql:postgresql:42.2.27")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    implementation("org.postgresql:postgresql:42.5.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("io.ktor:ktor-server-tests-jvm")
 }
 
 tasks.test {
