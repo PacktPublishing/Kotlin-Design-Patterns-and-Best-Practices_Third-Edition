@@ -42,7 +42,7 @@ object CatsTable : IntIdTable() {
 }
 
 @Serializable
-data class Cat(
+data class 20Cat(
     val id: Int,
     val name: String,
     val age: Int

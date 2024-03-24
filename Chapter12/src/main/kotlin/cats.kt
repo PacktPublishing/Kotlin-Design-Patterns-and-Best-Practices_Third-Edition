@@ -1,6 +1,7 @@
 import io.vertx.core.json.JsonObject
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,7 @@ class CatsVerticle : CoroutineVerticle() {
                             body.getInteger("age"),
                             body.getInteger("id")
                         )
-                    ).await()
+                    ).coAwait()
                 req.reply(body.getInteger("id"))
             }
         }
