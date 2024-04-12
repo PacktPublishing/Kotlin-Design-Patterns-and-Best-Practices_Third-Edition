@@ -2,13 +2,9 @@ import java.util.*
 
 fun main(args: Array<String>) {
     lists()
-
     sets()
-
     maps()
-
     arrays()
-
     println(args.joinToString(", "))
 }
 
@@ -22,13 +18,9 @@ fun arrays() {
 
 fun maps() {
     val movieBatmans = mapOf(
-
         "Batman Returns" to "Michael Keaton",
-
         "Batman Forever" to "Val Kilmer",
-
         "Batman & Robin" to "George Clooney"
-
     )
 
     println(movieBatmans["Batman Returns"])
@@ -38,24 +30,18 @@ fun maps() {
     // Mutable map that is sorted by its keys
 
     val treeMap = TreeMap(
-
         mapOf(
-
             "Practical Pig" to "bricks",
-
             "Fifer" to "straw",
-
             "Fiddler" to "sticks"
-
         )
-
     )
 
     println(treeMap.keys)
 }
 
 fun sets() {
-    val footballChampions = setOf("France", "Germany", "Spain", "Italy", "Brazil", "France", "Brazil", "Germany")
+    val footballChampions = setOf("Brazil", "France", "Brazil", "Italy", "Spain", "Germany", "France")
 
     println(footballChampions)
 
