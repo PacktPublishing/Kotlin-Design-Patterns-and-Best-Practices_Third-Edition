@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: cats_db
+      POSTGRES_USER: cats_admin
+      POSTGRES_PASSWORD: abcd1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
